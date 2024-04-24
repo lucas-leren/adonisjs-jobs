@@ -31,6 +31,18 @@ export default class JobsListen extends BaseCommand {
   })
   declare concurrency: number
 
+  @flags.number({
+    description: 'Amount of jobs that a single worker is process according to the rate limit.',
+    default: 1,
+  })
+  declare limiter_max: number
+
+  @flags.number({
+    description: 'Amount of time elapsed between jobs.',
+    default: 1000,
+  })
+  declare limiter_duration: number
+
   async run() {
     const config = this.app.config.get<ReturnType<typeof defineConfig>>('jobs', {})
     const logger = await this.app.container.make('logger')
@@ -73,6 +85,10 @@ export default class JobsListen extends BaseCommand {
         {
           connection: config.connection,
           concurrency: this.concurrency,
+          limiter: {
+            max: this.limiter_max,
+            duration: this.limiter_duration,
+          },
         }
       )
 

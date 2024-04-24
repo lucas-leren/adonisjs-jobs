@@ -6,5 +6,7 @@ export default class JobsListen extends BaseCommand {
     static options: CommandOptions;
     queue: string[];
     concurrency: number;
+    limiter_max: number;
+    limiter_duration: number;
     run(): Promise<void>;
 }

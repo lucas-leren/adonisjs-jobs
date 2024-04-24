@@ -46,6 +46,10 @@ export default class JobsListen extends BaseCommand {
             }, {
                 connection: config.connection,
                 concurrency: this.concurrency,
+                limiter: {
+                    max: this.limiter_max,
+                    duration: this.limiter_duration,
+                },
             });
             worker.on('failed', (_job, error) => {
                 logger.error(error.message, []);
@@ -72,3 +76,15 @@ __decorate([
         default: 1,
     })
 ], JobsListen.prototype, "concurrency", void 0);
+__decorate([
+    flags.number({
+        description: 'Amount of jobs that a single worker is process according to the rate limit.',
+        default: 1,
+    })
+], JobsListen.prototype, "limiter_max", void 0);
+__decorate([
+    flags.number({
+        description: 'Amount of time elapsed between jobs.',
+        default: 1000,
+    })
+], JobsListen.prototype, "limiter_duration", void 0);
